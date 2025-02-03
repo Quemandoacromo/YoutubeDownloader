@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -65,7 +64,7 @@ public class App : Application, IDisposable
                     {
                         ThemeVariant.Light => Avalonia.Styling.ThemeVariant.Light,
                         ThemeVariant.Dark => Avalonia.Styling.ThemeVariant.Dark,
-                        _ => Avalonia.Styling.ThemeVariant.Default
+                        _ => Avalonia.Styling.ThemeVariant.Default,
                     };
 
                     InitializeTheme();
@@ -77,9 +76,6 @@ public class App : Application, IDisposable
     public override void Initialize()
     {
         base.Initialize();
-
-        // Increase maximum concurrent connections
-        ServicePointManager.DefaultConnectionLimit = 20;
 
         AvaloniaXamlLoader.Load(this);
     }
@@ -97,7 +93,7 @@ public class App : Application, IDisposable
         {
             "Light" => PlatformThemeVariant.Light,
             "Dark" => PlatformThemeVariant.Dark,
-            _ => PlatformSettings?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light
+            _ => PlatformSettings?.GetColorValues().ThemeVariant ?? PlatformThemeVariant.Light,
         };
 
         this.LocateMaterialTheme<MaterialThemeBase>().CurrentTheme =

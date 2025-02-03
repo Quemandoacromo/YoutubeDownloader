@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Onova;
 using Onova.Exceptions;
 using Onova.Services;
+using YoutubeDownloader.Core.Downloading;
 
 namespace YoutubeDownloader.Services;
 
@@ -18,7 +19,10 @@ public class UpdateService(SettingsService settingsService) : IDisposable
                 // YoutubeDownloader.win-arm64.zip
                 // YoutubeDownloader.win-x64.zip
                 // YoutubeDownloader.linux-x64.zip
-                $"YoutubeDownloader.{RuntimeInformation.RuntimeIdentifier}.zip"
+                // YoutubeDownloader.Bare.linux-x64.zip
+                FFmpeg.IsBundled()
+                    ? $"YoutubeDownloader.{RuntimeInformation.RuntimeIdentifier}.zip"
+                    : $"YoutubeDownloader.Bare.{RuntimeInformation.RuntimeIdentifier}.zip"
             ),
             new ZipPackageExtractor()
         )
