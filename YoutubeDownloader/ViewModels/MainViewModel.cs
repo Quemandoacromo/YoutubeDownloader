@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using CommunityToolkit.Mvvm.Input;
-using YoutubeDownloader.Core;
 using YoutubeDownloader.Core.Downloading;
 using YoutubeDownloader.Framework;
 using YoutubeDownloader.Services;
@@ -60,8 +59,8 @@ public partial class MainViewModel(
 
         var dialog = viewModelManager.CreateMessageBoxViewModel(
             "Unstable build warning",
-            """
-            You're using a development build of the application. These builds are not thoroughly tested and may contain bugs.
+            $"""
+            You're using a development build of {Program.Name}. These builds are not thoroughly tested and may contain bugs.
 
             Auto-updates are disabled for development builds. If you want to switch to a stable release, please download it manually.
             """,
@@ -75,7 +74,7 @@ public partial class MainViewModel(
 
     private async Task ShowFFmpegMessageAsync()
     {
-        if (!string.IsNullOrWhiteSpace(FFmpeg.TryGetCliFilePath()))
+        if (FFmpeg.IsAvailable())
             return;
 
         var dialog = viewModelManager.CreateMessageBoxViewModel(
@@ -83,7 +82,9 @@ public partial class MainViewModel(
             $"""
             FFmpeg is required for {Program.Name} to work. Please download it and make it available in the application directory or on the system PATH.
 
-            Click DOWNLOAD to go to the FFmpeg download page. You can also install FFmpeg using a package manager instead.
+            Alternatively, you can also download a version of {Program.Name} that has FFmpeg bundled with it.
+
+            Click DOWNLOAD to go to the FFmpeg download page.
             """,
             "DOWNLOAD",
             "CLOSE"

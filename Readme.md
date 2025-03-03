@@ -45,6 +45,10 @@ To learn more about the war and how you can help, [click here](https://tyrrrz.me
 > **Note**:
 > If you're unsure which build is right for your system, consult with [this page](https://useragent.cc) to determine your OS and CPU architecture.
 
+> **Note**:
+> **YoutubeDownloader** comes bundled with [FFmpeg](https://ffmpeg.org) which is used for processing videos.
+> You can also download a version of **YoutubeDownloader** that doesn't include FFmpeg (`YoutubeDownloader.Bare.*` builds) if you prefer to use your own installation.
+
 ## Features
 
 - Cross-platform graphical user interface
@@ -52,6 +56,7 @@ To learn more about the war and how you can help, [click here](https://tyrrrz.me
 - Download videos from playlists or channels
 - Download videos by search query
 - Selectable video quality and format
+- Automatically embed audio tracks in alternative languages
 - Automatically embed subtitles
 - Automatically inject media tags
 - Log in with a YouTube account to access private content

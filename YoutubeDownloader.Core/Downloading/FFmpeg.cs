@@ -7,6 +7,9 @@ namespace YoutubeDownloader.Core.Downloading;
 
 public static class FFmpeg
 {
+    private static string CliFileName { get; } =
+        OperatingSystem.IsWindows() ? "ffmpeg.exe" : "ffmpeg";
+
     public static string? TryGetCliFilePath()
     {
         static IEnumerable<string> GetProbeDirectoryPaths()
@@ -14,19 +17,53 @@ public static class FFmpeg
             yield return AppContext.BaseDirectory;
             yield return Directory.GetCurrentDirectory();
 
-            foreach (
-                var path in Environment.GetEnvironmentVariable("PATH")?.Split(Path.PathSeparator)
-                    ?? Enumerable.Empty<string>()
+            // Process PATH
+            if (
+                Environment.GetEnvironmentVariable("PATH")?.Split(Path.PathSeparator) is
+                { } processPaths
             )
             {
-                yield return path;
+                foreach (var path in processPaths)
+                    yield return path;
+            }
+
+            // Registry-based PATH variables
+            if (OperatingSystem.IsWindows())
+            {
+                // User PATH
+                if (
+                    Environment
+                        .GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User)
+                        ?.Split(Path.PathSeparator) is
+                    { } userPaths
+                )
+                {
+                    foreach (var path in userPaths)
+                        yield return path;
+                }
+
+                // System PATH
+                if (
+                    Environment
+                        .GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
+                        ?.Split(Path.PathSeparator) is
+                    { } systemPaths
+                )
+                {
+                    foreach (var path in systemPaths)
+                        yield return path;
+                }
             }
         }
 
         return GetProbeDirectoryPaths()
-            .Select(dirPath =>
-                Path.Combine(dirPath, OperatingSystem.IsWindows() ? "ffmpeg.exe" : "ffmpeg")
-            )
+            .Distinct(StringComparer.Ordinal)
+            .Select(dirPath => Path.Combine(dirPath, CliFileName))
             .FirstOrDefault(File.Exists);
     }
+
+    public static bool IsBundled() =>
+        File.Exists(Path.Combine(AppContext.BaseDirectory, CliFileName));
+
+    public static bool IsAvailable() => !string.IsNullOrWhiteSpace(TryGetCliFilePath());
 }
